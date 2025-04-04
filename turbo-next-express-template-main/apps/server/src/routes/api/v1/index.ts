@@ -1,7 +1,10 @@
-import { Router } from 'express';
+import { Router } from "express";
+import { authRouter } from "./auth.route";
 
 const v1Router = Router();
+v1Router.get('/', (req, res)=>{
+    res.send("Welcome");
+});
+v1Router.use("/auth", authRouter);
 
-// Routes goes here
-
-export {v1Router}
+export { v1Router };

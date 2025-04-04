@@ -1,7 +1,10 @@
 import { Router } from "express";
-import { register } from "../../controllers/auth.controller";
-
-const router = Router();
-router.post("/register", register);
-
-export default router;
+import { authController } from "../../../controllers/api/v1/auth.controller";
+import { validateRequest } from "../../../middleware/validaterequest";
+import { signupSchema } from "../../../validation/auth.validation";
+const authRouter = Router();
+authRouter.post(
+    "/register", 
+    // validateRequest(signupSchema),
+    authController.signup);
+export { authRouter };
