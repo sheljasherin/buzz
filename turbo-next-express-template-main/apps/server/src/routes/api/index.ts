@@ -1,8 +1,7 @@
-import { Router } from 'express';
+import { Router } from "express";
 import { v1Router } from "./v1";
 
 const apiRouter = Router();
+apiRouter.use("/v1", v1Router);
 
-apiRouter.use("/v1", v1Router)
-
-export { apiRouter }
+export { apiRouter };

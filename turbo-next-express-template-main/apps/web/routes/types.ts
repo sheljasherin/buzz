@@ -8,4 +8,6 @@ export interface INavigationRoutes {
   icon: ReactNode;
   label: string;
   path: PathName;
+  protected?: boolean; 
+  allowedRoles?: string[];
 }

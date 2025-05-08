@@ -6,7 +6,6 @@ import { Input } from "@repo/frontend/components/ui/input";
 import { MobileNav } from "./nav/MobileNav";
 import { Nav } from "./nav/Nav";
 import { UserMenu } from "./UserMenu";
-
 export const Header: React.FC<IProps> = (props) => {
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 z-[1]">

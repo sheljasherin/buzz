@@ -1,6 +1,10 @@
-import { LoginPageContent } from "./LoginPageContent";
+'use client';
 
-const Page: React.FC = () => {
-  return (<LoginPageContent />)
-}
+import React from 'react';
+import { LoginPage } from './LoginPageContent';
+
+const Page = () => {
+  return <LoginPage />;
+};
+
 export default Page;

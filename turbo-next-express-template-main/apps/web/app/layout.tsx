@@ -1,8 +1,10 @@
+// apps/web/app/layout.tsx
 import "./globals.css";
+import "@repo/frontend/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "@repo/frontend/globals.css";
 import { AppLayout } from "../components/appLayout/AppLayout";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,11 +17,13 @@ export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
-}): JSX.Element {
+}) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AppLayout>{children}</AppLayout>
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+          <AppLayout>{children}</AppLayout>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

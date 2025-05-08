@@ -65,7 +65,9 @@ export abstract class AbstractServices<
 
   public create = async (data: T): Promise<TCreate> => {
     try {
+      console.log("📤 Sending data to API:", data); // Debugging line
       const response = await this.http.post<IAPIV1Response<TCreate>>(`/`, data);
+      console.log("✅ API Response:", response.data); // Debugging line
       if (response.data.success) {
         return response.data.data;
       } else {
@@ -90,11 +92,14 @@ export abstract class AbstractServices<
   };
 
   protected apiError = (error: unknown) => {
-    const _error = error as AxiosError;
-    return new APIError(
-      _error.response.data as IAPIV1Response,
-      _error.message,
-      _error.response.status
-    );
+    if (error instanceof AxiosError && error.response) {
+      return new APIError(
+        error.response.data as IAPIV1Response,
+        error.message,
+        error.response.status
+      );
+    }
+    console.error("❌ Unknown Error:", error); // Debugging unknown error
+    throw new Error("An unknown error occurred.");
   };
 }

@@ -1,14 +1,16 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../helpers/sequelize";
 import { IUser } from "@repo/types/lib/schema/user";
-class User extends Model<IUser> implements IUser {
+
+export class UserModel extends Model<IUser> implements IUser {
   public id!: number;
   public username!: string;
   public email!: string;
   public password!: string;
   public role!: "user" | "organizer" | "admin";
 }
-User.init(
+
+UserModel.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -31,14 +33,12 @@ User.init(
     role: {
       type: DataTypes.ENUM("user", "organizer", "admin"),
       allowNull: false,
-      defaultValue: "user",
     },
   },
   {
     sequelize,
-    tableName: "usertable", 
+    tableName: "usertable",
     timestamps: false,
+    underscored: true,
   }
 );
-
-export default User;

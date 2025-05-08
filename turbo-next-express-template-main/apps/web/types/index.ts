@@ -1,13 +1,13 @@
 
 export interface ICurrentUser {
-  id: string;
+  id: number;
   first_name: string;
   middle_name: string;
   last_name: string;
   primary_address_id: string;
   email: string;
   profile_photo_url: string;
-  role: "admin" | "user";
+  role: "admin" | "user"|"organizer";
 }
 
 export interface IUploadProgress {

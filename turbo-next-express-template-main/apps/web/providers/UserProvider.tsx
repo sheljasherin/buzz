@@ -1,41 +1,51 @@
-"use client";
-import { userServices } from "../services/userServices";
-import { getAccessToken } from "../utils/accessToken";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { PropsWithChildren, useContext, useMemo, useState } from "react";
-import { PageLoader } from "@repo/frontend/components/PageLoader";
-import { useQuery } from "../hooks/useQuery";
-import { ICurrentUser } from "../types";
+'use client';
 
-export const userContext = React.createContext<IUserContext>({
-  user: undefined,
-});
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { IUser } from "@repo/types/lib/schema/user"; // Adjust the path if necessary
+import { authService } from "../services/authServices"; // Corrected import path // Ensure this file exists
 
-interface IUserContext {
-  user: ICurrentUser;
+interface UserContextType {
+  user: IUser | null;
+  setUser: React.Dispatch<React.SetStateAction<IUser | null>>;
+  loading: boolean; // Add a loading state
 }
 
-export const UserProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const searchParam = useSearchParams();
-  const router = useRouter();
-  const path = usePathname();
-  const [token, setToken] = useState(
-    searchParam.get("token") || getAccessToken()
+const UserContext = createContext<UserContextType | null>(null);
+
+export const UserProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<IUser | null>(null);
+  const [loading, setLoading] = useState(true); // Initialize loading state
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      setLoading(true); // Start loading
+      try {
+        const fetchedUser = await authService.getCurrentUser();
+        setUser(fetchedUser);
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+        //  setUser(null);  //removed setting user to null.
+      } finally {
+        setLoading(false); // Stop loading, regardless of success or failure
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  const contextValue = { user, setUser, loading }; // Include loading in the context
+
+  return (
+    <UserContext.Provider value={contextValue}>
+      {children}
+    </UserContext.Provider>
   );
-
-  const [response, isFetchingUser] = useQuery(userServices.getCurrentUser, []);
-
-  const user = response?.user;
-
-  const value: IUserContext = useMemo(() => ({ user }), [user]);
-
-  if (isFetchingUser) {
-    return <PageLoader />;
-  }
-
-  return <userContext.Provider value={value}>{children}</userContext.Provider>;
 };
 
 export const useUser = () => {
-  return useContext(userContext);
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
+  return context;
 };

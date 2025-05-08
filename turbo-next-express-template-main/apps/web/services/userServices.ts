@@ -1,28 +1,17 @@
-import { IAPIV1Response } from "@repo/types/lib/types";
-import { AbstractServices } from "./AbstractService";
-import { IUser } from "@repo/types/lib/schema/user";
-import { ICurrentUser } from "../types";
-import { APIError } from "@repo/frontend/errors/APIError";
+// apps/web/services/userServices.ts
+import { IUser } from '@repo/types/lib/schema/user';
+import { getHttp } from '../utils/getHttp';
 
-class UserServices extends AbstractServices<IUser> {
-  constructor() {
-    super("/users");
-  }
+const http = getHttp('/user'); // <--- SUSPECT THIS LINE
 
-  getCurrentUser = async (): Promise<{ user: ICurrentUser }> => {
+export const userServices = {
+  getCurrentUser: async (): Promise<IUser | null> => {
     try {
-      const response =
-        await this.http.get<IAPIV1Response<{ user: ICurrentUser }>>("/me");
-
-      if (response.data.success) {
-        return response.data.data;
-      } else {
-        throw new APIError(response.data as IAPIV1Response);
-      }
+      const response = await http.get<{ user: IUser }>('/me');
+      return response.data.user;
     } catch (error) {
-      throw this.apiError(error);
+      console.error('Failed to fetch current user:', error);
+      return null;
     }
-  };
-}
-
-export const userServices = Object.freeze(new UserServices());
+  },
+};

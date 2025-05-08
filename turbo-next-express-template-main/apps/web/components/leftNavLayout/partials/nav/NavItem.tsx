@@ -6,8 +6,7 @@ export const NavItem: React.FC<IProps> = (props) => {
   return (
     <Link
       href={props.path}
-      className={`flex items-center gap-3 rounded-lg px-3 py-2 ${props.isActive ? "bg-muted text-primary" : "text-muted-foreground"} transition-all hover:text-primary`}
-    >
+      className={`flex items-center gap-3 rounded-lg px-3 py-2 ${props.isActive ? "bg-muted text-primary" : "text-muted-foreground"} transition-all hover:text-primary`} >
       {props.icon}
       {props.label}
     </Link>

@@ -1,4 +1,8 @@
+"use client";
+
 import React from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { CircleUser } from "lucide-react";
 import { Button } from "@repo/frontend/components/ui/button";
 import {
@@ -9,7 +13,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@repo/frontend/components/ui/dropdown-menu";
-export const UserMenu: React.FC<IProps> = (props) => {
+
+export const UserMenu: React.FC = () => {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -21,13 +33,13 @@ export const UserMenu: React.FC<IProps> = (props) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Settings</DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/Account">User</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
-
-interface IProps {}
